@@ -1,6 +1,10 @@
-# Installing Anchore on Kubernetes
+# Deployment Guide: Installing Anchore on Kubernetes
 
 Both Anchore Engine and Enterprise software are distributed as container images, and can run in a Kubernetes cluster. 
+
+##### Table of Contents  
+[Helm Chart](#Helm-Chart)  
+[Emphasis](#Anchore-Enterprise) 
 
 ## Helm Chart
 
@@ -14,43 +18,27 @@ With Anchore Enterprise, some additional configuration is required to successful
 
 **Note**: Prior to going to production, it is highly recommended that you understand the architecture, and learn the configuration options. 
 
-### Anchore Enterprise
+## Anchore Enterprise
 
 The sections below will focus on deployment of Anchore Enterprise in a production environment. 
 
 **Deployment Warning**: By default, the chart will install a non-production ready deployment of the software. This provides a less complicated out-of-the-box experience for new users, but will likely lead to problems in large scale production environments. Additionally, there are recommended security configuration options in the chart which are also disabled by default. 
 
-#### Configuration Options
+### Configuration Options
+
+To customize the Anchore Enterprise deployment, create a yaml file to populate with production configuration options. This file will then be passed to the Helm chart during installation. Included in this repository is an `enterprise_values.yaml` file which contains an example of a complete "production" deployment configuration. **Note**: There are site specific settings in the 
+
+Below includes sections of the Helm chart `values.yaml` which are considered production-ready.
 
 #### Storage
 
 ##### Anchore Database
 
-Anchore Enterprise requires a PostgreSQL database (>=9.6) to operate. **Production Recommendation**: Run this database externally via a service such as Amazon RDS. 
+Anchore Enterprise requires a PostgreSQL database (>=9.6) to operate. 
 
-##### Anchore Feeds Database
+**Production Recommendation**: Run this database externally via a service such as Amazon RDS. 
 
-Anchore Enterprise provides an on-premise feeds service which is supported by a PostgreSQL database (>=9.6). **Production Recommendation**: Run this database externally via a service such as Amazon RDS.
-
-###### Database Sizing
-
-TODO
-
-###### Database tuning
-
-While the Anchore Feeds Database remains relatively the same size, the main Anchore Database will grow over time. Anchore provides systems to facilitate image management operations and storage over time. 
-
-###### Anchore Client Connections to the Anchore Database
-
-Every Anchore "Core" services connects to the database with a default: `connectionPoolSize: 30` and a `connectionPoolMaxOverflow: 100`. These settings on the Anchore services side control how many client connections each service can make concurrently. On the Postgres side, max_connections control how many client total can connect at once. 
-
-**Production Recommendation:** Check the max_connections in Postgres via: `SHOW max_connections` prior to deployment of Anchore. The `max_connections` output should be (at minimum) greater than the total `connectionPoolSize` for all services.
-- 30 Anchore services * 30 connectionPoolSize = 900 max_connections or greater. 
-- To accommodate the burst `connectionPoolMaxOverflow: 100`. 30 Anchore services * 100 = 3000 max_connections. 
-
-As long as your database has enough resources to handle incoming connections then the Anchore service pool won't bottleneck.
-
-**Example Configuration: Anchore Database**
+**Example Configuration Section: Anchore Database**
 
 ```
 # Anchore engine has a dependency on Postgresql, configure here
@@ -72,6 +60,55 @@ postgresql:
   #  resourcePolicy: nil
   #  size: 20Gi
 ```
+
+##### Anchore Feeds Database
+
+Anchore Enterprise provides an on-premise feeds service which is supported by a PostgreSQL database (>=9.6). 
+
+**Production Recommendation**: Run this database externally via a service such as Amazon RDS.
+
+**Example Configuration Section: Anchore Feeds DB**
+
+```
+# Only utilized if anchoreEnterpriseGlobal.enabled: true
+anchore-feeds-db:
+  # To use an external DB or Google CloudSQL, uncomment & set 'enabled: false'
+  # externalEndpoint, postgresUser, postgresPassword & postgresDatabase are required values for external postgres
+  enabled: false
+  postgresUser: anchoreengine
+  postgresPassword: anchore-postgres,123
+  postgresDatabase: anchore-feeds
+
+  # Specify an external (already existing) postgres deployment for use.
+  # Set to the host and port. eg. mypostgres.myserver.io:5432
+  externalEndpoint: external-feeds-db-endpoint:5432
+
+  # Configure size of the persitant volume used with helm managed chart.
+  # This should be commented out if using an external endpoint.
+  #persistence:
+  #  resourcePolicy: nil
+  #  size: 20Gi
+```
+
+###### Database Sizing
+
+TODO
+
+###### Database tuning
+
+While the Anchore Feeds Database remains relatively the same size, the main Anchore Database will grow over time. Anchore provides systems to facilitate image management operations and storage over time. 
+
+###### Anchore Client Connections to the Anchore Database
+
+Every Anchore "Core" services connects to the database with a default: `connectionPoolSize: 30` and a `connectionPoolMaxOverflow: 100`. These settings on the Anchore services side control how many client connections each service can make concurrently. On the Postgres side, max_connections control how many client total can connect at once. 
+
+**Production Recommendation:** Check the max_connections in Postgres via: `SHOW max_connections` prior to deployment of Anchore. The `max_connections` output should be (at minimum) greater than the total `connectionPoolSize` for all services.
+- 30 Anchore services * 30 connectionPoolSize = 900 max_connections or greater. 
+- To accommodate the burst `connectionPoolMaxOverflow: 100`. 30 Anchore services * 100 = 3000 max_connections. 
+
+As long as your database has enough resources to handle incoming connections then the Anchore service pool won't bottleneck.
+
+
 ##### Object Storage
 
 

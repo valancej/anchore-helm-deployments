@@ -3,8 +3,9 @@
 Both Anchore Engine and Enterprise software are distributed as container images, and can run in a Kubernetes cluster. 
 
 #### Table of Contents  
-[1. Helm Chart](#Helm-Chart)  
-[2. Anchore Enterprise](#Anchore-Enterprise) 
+1. [Helm Chart](#Helm-Chart)  
+2. [Anchore Enterprise Deploymemt](#Anchore-Enterprise)
+  a. [Configuration Options](#Configuration-Options)
 
 ## Helm Chart
 

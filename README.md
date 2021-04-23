@@ -4,7 +4,7 @@ Both Anchore Engine and Enterprise software are distributed as container images,
 
 ##### Table of Contents  
 [Helm Chart](#Helm-Chart)  
-[Emphasis](#Anchore-Enterprise) 
+[Anchore Enterprise](#Anchore-Enterprise) 
 
 ## Helm Chart
 

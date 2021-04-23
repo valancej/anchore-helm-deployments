@@ -2,7 +2,7 @@
 
 Both Anchore Engine and Enterprise software are distributed as container images, and can run in a Kubernetes cluster. 
 
-##### Table of Contents  
+#### Table of Contents  
 [1. Helm Chart](#Helm-Chart)  
 [2. Anchore Enterprise](#Anchore-Enterprise) 
 
@@ -18,7 +18,7 @@ With Anchore Enterprise, some additional configuration is required to successful
 
 **Note**: Prior to going to production, it is highly recommended that you understand the architecture, and learn the configuration options. 
 
-## Anchore Enterprise
+## Anchore Enterprise Deployment
 
 The sections below will focus on deployment of Anchore Enterprise in a production environment. 
 

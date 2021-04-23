@@ -15,6 +15,7 @@ Below is a checklist that can help you deploy Anchore Enterprise. This checklist
 1. Infrastructure Planning: Review the architecture and deployment requirements for CPU, Memory and Storage
 2. Prerequisites: Ensure you meet minimum software requirements for deployment on Kubernetes
 3. Configuration Options: Review the configuration options and update your configuration accordingly
+4. Operations Planning: Review the operations guide section to ensure successful Day 2 operations of Anchore
 
 ## Helm Chart
 

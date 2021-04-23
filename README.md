@@ -3,9 +3,18 @@
 Both Anchore Engine and Enterprise software are distributed as container images, and can run in a Kubernetes cluster. 
 
 #### Table of Contents  
-1. [Helm Chart](#Helm-Chart)  
-2. [Anchore Enterprise Deploymemt](#Anchore-Enterprise)
+1. [Production Readiness Checklist](#Production-Readiness-Checklist)
+2. [Helm Chart](#Helm-Chart)  
+3. [Anchore Enterprise Deploymemt](#Anchore-Enterprise)
     1. [Configuration Options](#Configuration-Options)
+
+## Production Readiness Checklist
+
+Below is a checklist that can help you deploy Anchore Enterprise. This checklist is not an exhaustive list and you may need to add additional tasks depending on your environment.
+
+1. Infrastructure Planning: Review the architecture and deployment requirements for CPU, Memory and Storage
+2. Prerequisites: Ensure you meet minimum software requirements for deployment on Kubernetes
+3. Configuration Options: Review the configuration options and update your configuration accordingly
 
 ## Helm Chart
 
@@ -108,7 +117,6 @@ Every Anchore "Core" services connects to the database with a default: `connecti
 - To accommodate the burst `connectionPoolMaxOverflow: 100`. 30 Anchore services * 100 = 3000 max_connections. 
 
 As long as your database has enough resources to handle incoming connections then the Anchore service pool won't bottleneck.
-
 
 ##### Object Storage
 
